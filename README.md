@@ -14,7 +14,7 @@ Demo app: https://roots-router-demo.netlify.app/
 To install:
 
 ```
-npm i roots-svelte-router
+npm i roots-router
 ```
 
 ## Simple example
@@ -22,7 +22,7 @@ npm i roots-svelte-router
 ### `App.svelte`
 ```svelte
 <script>
-  import {RouterView, initRouter} from 'roots-svelte-router';
+  import {RouterView, initRouter} from 'roots-router';
 
   import Home from './Home.svelte';
   import About from './About.svelte';
@@ -49,7 +49,7 @@ npm i roots-svelte-router
 ### `Menu.svelte`
 ```svelte
 <script>
-  import {link, active} from 'roots-svelte-router';
+  import {link, active} from 'roots-router';
 </script>
 
 <nav>
@@ -133,7 +133,7 @@ For example this could be your `App.svelte` component:
 ```svelte
 <script>
   import {onMount} from 'svelte';
-  import {RouterView} from 'roots-svelte-router';
+  import {RouterView} from 'roots-router';
   import Spinner from './Spnner.svelte';
   import {fetchIntialData} from 'api';
 
@@ -167,7 +167,7 @@ Path parameters will be available in the `params` object of the `currentRoute` s
 
 ```svelte
 <script>
-  import {currentRoute} from 'roots-svelte-router';
+  import {currentRoute} from 'roots-router';
   console.log($currentRoute.params);
 </script>
 ```
@@ -262,7 +262,7 @@ To trigger route changes use the `link` action:
 
 ```svelte
 <script>
-  import {link} from 'roots-svelte-router';
+  import {link} from 'roots-router';
 </script>
 
 <!-- Simple navigation -->
@@ -284,7 +284,7 @@ By default, this will add the `active` CSS class to the element, but you can con
 
 ```svelte
 <script>
-  import {link, active} from 'roots-svelte-router';
+  import {link, active} from 'roots-router';
 </script>
 
 <!-- Will mark as active if the router is on /about -->
@@ -329,7 +329,7 @@ window.history.forward();
 ### `navigate()`
 
 ```js
-import {navigate} from 'roots-svelte-router';
+import {navigate} from 'roots-router';
 
 // Navigate to a path
 navigate('/about');
@@ -372,7 +372,7 @@ If there are querystring parameters in the URL, you will be able to read them fr
 
 ```svelte
 <script>
-  import {currentRoute} from 'roots-svelte-router';
+  import {currentRoute} from 'roots-router';
   console.log($currentRoute.query);
 </script>
 ```
@@ -381,7 +381,7 @@ You can also set parameters to the URL without triggering a page change by using
 
 ```svelte
 <script>
-import {addQueryParamsToUrl} from 'roots-svelte-router';
+import {addQueryParamsToUrl} from 'roots-router';
 
 function addParams () {
   addQueryParamsToUrl({

@@ -1,5 +1,5 @@
 {
-  "name": "roots-svelte-router",
+  "name": "roots-router",
   "svelte": "src/index.js",
   "main": "src/index.js",
   "version": "0.1.0",
