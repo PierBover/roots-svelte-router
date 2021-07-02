@@ -1,0 +1,5 @@
+.DS_Store
+node_modules
+/demo-app/public/build
+/demo-app/stats.html
+/demo-app/.size-snapshot.json
