@@ -1,3 +1,5 @@
+<p align="center"><img src="./graphics/roots-logo.svg" width="200"></p>
+
 # Roots
 
 This is a client-side router for Svelte that uses history mode. It's in early developement so expect bugs, changes, and dragons.
