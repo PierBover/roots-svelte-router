@@ -9,7 +9,7 @@ This is a client-side router for Svelte that uses history mode. It's in early de
 * No dependencies (other than Svelte)
 * Uses history API and native links for navigation
 * Multiple options to manage scrolling
-* Can use modals as routes
+* Can compose nested components at the route definition
 
 Demo app: https://roots-router-demo.netlify.app/
 
