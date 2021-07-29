@@ -20,6 +20,8 @@ export function initRouter (initialConfig) {
 		return;
 	}
 
+	config.basePath = initialConfig.basePath;
+
 	config.routes = flattenRoutes(initialConfig.routes);
 
 	// Scroll to top on route change
@@ -46,10 +48,17 @@ export function initRouter (initialConfig) {
 	window.addEventListener('popstate', onPopState);
 	if (config.manageScroll) window.addEventListener('scroll', saveScrollDebounce, {passive: true});
 
-	navigate({
-		path: getFullBrowserPath(),
-		addToHistory: false
-	});
+	if (config.basePath) {
+		navigate({
+			path: addBasePath(getFullBrowserPath()),
+			replace: true
+		});
+	} else {
+		navigate({
+			path: getFullBrowserPath(),
+			addToHistory: false
+		});
+	}
 }
 
 function flattenRoutes (routesTree, depth = 0) {
@@ -89,10 +98,18 @@ function flattenRoutes (routesTree, depth = 0) {
 	if (depth === 0) {
 		routes.forEach((route) => {
 			if (route.path.includes(':')) route.hasParams = true;
-		});
 
-		// console.log(routes);
+			// add the basepath to all routes
+			if (config.basePath) {
+				route.path = addBasePath(route.path);
+			}
+
+			// remove trailing slashes
+			route.path = removeTrailingSlash(route.path);
+		});
 	}
+
+	console.log(routes);
 
 	return routes;
 }
@@ -137,6 +154,7 @@ function getScrollPositionById (id) {
 }
 
 function getRouteFromPath (path) {
+
 	for (let i = 0; i < config.routes.length; i++) {
 		const route = config.routes[i];
 
@@ -210,7 +228,7 @@ function getParamsFromPath (cleanPath, routePath) {
 	return params;
 }
 
-function getCleanPath (fullPath) {
+function getPathWithoutHashOrQuery (fullPath) {
 	let path = fullPath.split('#')[0];
 	path = path.split('?')[0];
 	return path;
@@ -255,12 +273,16 @@ export async function navigate (options) {
 		}
 	}
 
-	// console.log({options});
+	// remove trailing slash
+	options.path = removeTrailingSlash(options.path);
+
+	// add base path
+	if (config.basePath) options.path = addBasePath(options.path);
 
 	const fullPath = options.path;
 
 	// Find the route from a path
-	const cleanPath = getCleanPath(fullPath);
+	const cleanPath = getPathWithoutHashOrQuery(fullPath);
 	const route = getRouteFromPath(cleanPath);
 
 	// console.log(route);
@@ -327,7 +349,7 @@ async function onPopState (event) {
 
 	const historyState = event.state;
 	const fullPath = getFullBrowserPath();
-	const cleanPath = getCleanPath(fullPath);
+	const cleanPath = getPathWithoutHashOrQuery(fullPath);
 	const route = getRouteFromPath(cleanPath);
 	const params = route.hasParams ? getParamsFromPath(cleanPath, route.path) : {};
 	const query = getQueryParamsFromPath(fullPath);
@@ -354,4 +376,34 @@ async function onPopState (event) {
 			if (scrollPosition) setScroll(scrollPosition);
 		}
 	}
+}
+
+export function joinPaths (paths) {
+	// join
+	let path = paths.join('/');
+
+	// remove double slashes
+	path = path.replace(/\/{2,}/g, '/');
+
+	// Add first slash
+	if (path.charAt(0) !== '/') path = '/' + path;
+
+	// remove trailing slash
+	path = removeTrailingSlash(path);
+
+	return path;
+}
+
+export function addBasePath (path) {
+	if (!config.basePath || startsWithBasePath(path)) return path;
+	return joinPaths([config.basePath, path]);
+}
+
+function startsWithBasePath (path) {
+	if (config.basePath) return path.startsWith(config.basePath);
+}
+
+function removeTrailingSlash (path) {
+	if (path.charAt(path.length - 1) !== '/') return path;
+	return path.substr(0, path.length - 1);
 }

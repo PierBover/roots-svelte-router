@@ -1,4 +1,4 @@
-import {navigate} from '../router.js';
+import {navigate, addBasePath} from '../router.js';
 
 function onClick (options) {
 
@@ -31,5 +31,7 @@ function onClick (options) {
 }
 
 export default function (node, options = {}) {
+	// add the base path to the href
+	node.setAttribute('href', addBasePath(node.getAttribute('href')));
 	node.addEventListener('click', onClick(options));
 }
