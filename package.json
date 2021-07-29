@@ -2,7 +2,7 @@
   "name": "roots-router",
   "svelte": "src/index.js",
   "main": "src/index.js",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "keywords": ["router", "svelte", "spa", "front-end", "single page application"],
   "files": [
     "src"

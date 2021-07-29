@@ -1,3 +1,12 @@
+# 0.2.0
+
+### New features
+* Base path setting
+
+# 0.1.0
+
+Moved to new repo.
+
 # 0.0.12
 
 ### New features
