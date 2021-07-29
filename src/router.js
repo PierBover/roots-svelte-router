@@ -20,9 +20,8 @@ export function initRouter (initialConfig) {
 		return;
 	}
 
+	// Base path
 	config.basePath = initialConfig.basePath;
-
-	config.routes = flattenRoutes(initialConfig.routes);
 
 	// Scroll to top on route change
 	config.scrollToTop = typeof initialConfig.scrollToTop === 'undefined' ? true : initialConfig.scrollToTop;
@@ -32,6 +31,9 @@ export function initRouter (initialConfig) {
 
 	// Let the browser manage scrolling
 	config.manageScroll = typeof initialConfig.manageScroll === 'undefined' ? true : initialConfig.manageScroll;
+
+	// Always remove trailing slash
+	config.endWithSlash = typeof initialConfig.endWithSlash === 'undefined' ? false : initialConfig.endWithSlash;
 
 	// Hooks
 	config.onRouteMatch = initialConfig.onRouteMatch;
@@ -47,6 +49,9 @@ export function initRouter (initialConfig) {
 
 	window.addEventListener('popstate', onPopState);
 	if (config.manageScroll) window.addEventListener('scroll', saveScrollDebounce, {passive: true});
+
+	// Init routes
+	config.routes = flattenRoutes(initialConfig.routes);
 
 	if (config.basePath) {
 		navigate({
@@ -104,12 +109,12 @@ function flattenRoutes (routesTree, depth = 0) {
 				route.path = addBasePath(route.path);
 			}
 
-			// remove trailing slashes
-			route.path = removeTrailingSlash(route.path);
+			// add or remove trailing slashes
+			if (config.endWithSlash) route.path = addTrailingSlash(route.path);
+			else route.path = removeTrailingSlash(route.path);
 		});
 	}
 
-	// console.log(routes);
 
 	return routes;
 }
@@ -157,34 +162,7 @@ function getRouteFromPath (path) {
 
 	for (let i = 0; i < config.routes.length; i++) {
 		const route = config.routes[i];
-
-		// If the path has parameters we need to check whether the segments match
-		if (route.path.includes(':')) {
-			const pathSegments = path.split('/');
-			const routePathSegments = route.path.split('/');
-
-			// If the number of segments doesn't match...
-			if (pathSegments.length !== routePathSegments.length) continue;
-
-			// Let's compare segment by segment...
-			for (let j = 1; j < pathSegments.length; j++) {
-				const isParam = routePathSegments[j].charAt(0) === ':';
-				const isLast = j === pathSegments.length - 1;
-				const segmentsMatch = pathSegments[j] === routePathSegments[j];
-				const hasValue = pathSegments[j] !== '';
-
-				if (!isParam && !segmentsMatch) break;
-
-				if (isParam && !isLast) {
-					if (hasValue) continue
-					else break;
-				}
-
-				if (isLast && segmentsMatch || isLast && isParam && hasValue) return route;
-			}
-		} else if (route.path === path) {
-			return route;
-		}
+		if (pathsMatch(path, route.path)) return route;
 	}
 
 	// If we haven't matched a route we return the error route
@@ -192,7 +170,6 @@ function getRouteFromPath (path) {
 }
 
 function blockPageScroll () {
-	// console.log('blocking scroll');
 	document.body.style.overflow = 'hidden';
 }
 
@@ -213,8 +190,8 @@ function saveScrollPositionToCurrentHistoryItem () {
 	window.history.replaceState(state, '', getFullBrowserPath());
 }
 
-function getParamsFromPath (cleanPath, routePath) {
-	const pathSegments = cleanPath.split('/');
+function getParamsFromPath (path, routePath) {
+	const pathSegments = path.split('/');
 	const routePathSegments = routePath.split('/');
 	const params = {};
 
@@ -273,8 +250,9 @@ export async function navigate (options) {
 		}
 	}
 
-	// remove trailing slash
-	options.path = removeTrailingSlash(options.path);
+	// add or remove trailing slash
+	if (config.endWithSlash) options.path = addTrailingSlash(options.path);
+	else options.path = removeTrailingSlash(options.path);
 
 	// add base path
 	if (config.basePath) options.path = addBasePath(options.path);
@@ -285,7 +263,6 @@ export async function navigate (options) {
 	const cleanPath = getPathWithoutHashOrQuery(fullPath);
 	const route = getRouteFromPath(cleanPath);
 
-	// console.log(route);
 
 	const params = route.hasParams ? getParamsFromPath(cleanPath, route.path) : {};
 	const query = getQueryParamsFromPath(fullPath);
@@ -323,8 +300,6 @@ export async function navigate (options) {
 	}
 
 	if (options.scrollToId) historyState.scrollToId = options.scrollToId;
-
-	// console.log({fullPath, historyState});
 
 	if (options.addToHistory !== false) {
 		if (options.replace) {
@@ -399,7 +374,7 @@ export function addBasePath (path) {
 	return joinPaths([config.basePath, path]);
 }
 
-function startsWithBasePath (path) {
+export function startsWithBasePath (path) {
 
 	if (!config.basePath) return;
 
@@ -409,7 +384,67 @@ function startsWithBasePath (path) {
 	return path.startsWith(basePath);
 }
 
+function addTrailingSlash (path) {
+	if (path.charAt(path.length - 1) === '/') return path;
+	return path + '/';
+}
+
 function removeTrailingSlash (path) {
 	if (path.charAt(path.length - 1) !== '/') return path;
 	return path.substr(0, path.length - 1);
+}
+
+function removeFirstSlash (path) {
+	if (path.charAt(0) !== '/') return path;
+	return path.substr(1, path.length - 1);
+}
+
+export function pathsMatch (path, routePath, matchStart) {
+
+	const hasParams = routePath.includes(':');
+
+	// If the path of the route doesn't have params
+	// simply compare the strings without any slashes
+	if (!hasParams) {
+		path = path.replace(/\//g, '');
+		routePath = routePath.replace(/\//g, '');
+
+		if (!matchStart) {
+			return path === routePath;
+		} else {
+			return routePath.startsWith(path);
+		}
+
+	}
+
+	// If the routePath has params we need to compare the path segments
+
+	// remove first and last slashes to prevent
+	path = removeTrailingSlash(removeFirstSlash(path));
+	routePath = removeTrailingSlash(removeFirstSlash(routePath));
+
+	const pathSegments = path.split('/');
+	const routePathSegments = routePath.split('/');
+
+	// If the number of segments doesn't match the paths can't match
+	if (!matchStart && pathSegments.length !== routePathSegments.length) return false;
+
+	// Let's compare segment by segment...
+	for (let i = 1; i < pathSegments.length; i++) {
+		const isParam = routePathSegments[i].charAt(0) === ':';
+		const segmentsMatch = pathSegments[i] === routePathSegments[i];
+		const hasValue = pathSegments[i] !== '';
+
+		// If the segment is not a param and they don't match...
+		if (!isParam && !segmentsMatch) return false;
+
+		// If the segment is a param
+		if (isParam) {
+			if (hasValue) continue
+			else return false;
+		}
+	}
+
+	return true;
+
 }
