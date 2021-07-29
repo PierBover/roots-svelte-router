@@ -3,7 +3,13 @@
   "svelte": "src/index.js",
   "main": "src/index.js",
   "version": "0.3.1",
-  "keywords": ["router", "svelte", "spa", "front-end", "single page application"],
+  "keywords": [
+    "router",
+    "svelte",
+    "spa",
+    "front-end",
+    "single page application"
+  ],
   "files": [
     "src"
   ],
@@ -32,7 +38,9 @@
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-terser": "^7.0.2",
-    "sirv-cli": "^1.0.11",
-    "svelte": "^3.37.0"
+    "sirv-cli": "^1.0.11"
+  },
+  "dependencies": {
+    "svelte": "^3.41.0"
   }
 }
