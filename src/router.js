@@ -11,15 +11,6 @@ export const config = {};
 
 export function initRouter (initialConfig) {
 
-	// This may not be necessary...
-	if (document.readyState !== 'complete') {
-		document.addEventListener('readystatechange', () => {
-			initRouter(initialConfig);
-		});
-
-		return;
-	}
-
 	// Base path
 	config.basePath = initialConfig.basePath;
 
@@ -352,6 +343,8 @@ async function onPopState (event) {
 		}
 	}
 }
+
+// UTILS
 
 export function joinPaths (paths) {
 	// join
