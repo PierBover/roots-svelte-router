@@ -460,9 +460,7 @@ If your application is running in a folder you can configure the `basePath` sett
 
 The first and last slashes are optional.
 
-Once the router inits, this base path will be added automatically to all available routes.
-
-You don't need to add the base path to your links either. When using the `link` action, it will be automaticaly added to the `href` when the link is mounted to the DOM.
+Once the router inits, this base path will be added automatically to all available routes. You don't need to add the base path when using the `navigate()` function or to the links using the `link` action, although if you do, nothing bad will happen.
 
 ## API
 ### Router configuration options
