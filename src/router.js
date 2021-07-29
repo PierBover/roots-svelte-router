@@ -109,7 +109,7 @@ function flattenRoutes (routesTree, depth = 0) {
 		});
 	}
 
-	console.log(routes);
+	// console.log(routes);
 
 	return routes;
 }
