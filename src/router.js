@@ -430,7 +430,7 @@ export function pathsMatch (path, routePath, matchStart) {
 	if (!matchStart && pathSegments.length !== routePathSegments.length) return false;
 
 	// Let's compare segment by segment...
-	for (let i = 1; i < pathSegments.length; i++) {
+	for (let i = 0; i < pathSegments.length; i++) {
 		const isParam = routePathSegments[i].charAt(0) === ':';
 		const segmentsMatch = pathSegments[i] === routePathSegments[i];
 		const hasValue = pathSegments[i] !== '';

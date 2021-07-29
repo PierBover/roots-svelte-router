@@ -27,7 +27,7 @@ function setActiveClass (link, route) {
 	const linkPath = link.node.pathname;
 	const {matchStart, activeClass, ariaCurrent} = link.options;
 
-	let isActive = pathsMatch(linkPath, route.path, matchStart);
+	const isActive = pathsMatch(linkPath, route.path, matchStart);
 
 	if (isActive) {
 		link.node.classList.add(activeClass);
