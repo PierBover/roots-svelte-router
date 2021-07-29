@@ -400,7 +400,13 @@ export function addBasePath (path) {
 }
 
 function startsWithBasePath (path) {
-	if (config.basePath) return path.startsWith(config.basePath);
+
+	if (!config.basePath) return;
+
+	// remove slashes
+	path = path.replace(/\//g, '');
+	const basePath = config.basePath.replace(/\//g, '');
+	return path.startsWith(basePath);
 }
 
 function removeTrailingSlash (path) {
