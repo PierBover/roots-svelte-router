@@ -2,7 +2,7 @@
 
 # Roots
 
-This is a client-side router for Svelte that uses history mode. It's in early developement so expect bugs, changes, and dragons.
+This is a client-side router for Svelte that uses history mode. It's somewhat stable but expect bugs and changes before the 1.0 release.
 
 ### Features
 * Lightweight (aprox 3kB gzip)
