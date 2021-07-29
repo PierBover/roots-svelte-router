@@ -301,7 +301,6 @@ By default, this will add the `active` CSS class to the element, but you can con
 You can define a custom default active CSS class using the `activeClass` setting in the router configuration, or in the action settings:
 
 ```svelte
-<!-- Use a custom CSS class -->
 <a href="/about" use:link use:active={{activeClass: 'is-active'}}>About</a>
 ```
 
@@ -310,7 +309,6 @@ You can define a custom default active CSS class using the `activeClass` setting
 By default, the `active` action will add `aria-current="page"` on an active link. You can customize this value depending on your use case:
 
 ```svelte
-<!-- Use a custom CSS class -->
 <a href="/about" use:link use:active={{ariaCurrent: 'location'}}>About</a>
 ```
 
