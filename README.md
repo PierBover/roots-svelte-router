@@ -336,19 +336,25 @@ import {navigate} from 'roots-router';
 // Navigate to a path
 navigate('/about');
 
-// Navigate but replace current history item instead of pushing a new route
+// Navigate and replace current history item instead of pushing a new route
 navigate({
   path: '/about',
   replace: true
 });
 
-// Navigate and don't scroll to the top
+// Navigate but don't add the change to the history
+navigate({
+  path: '/about',
+  addToHistory: false
+});
+
+// Navigate but don't scroll to the top
 navigate({
   path: '/about',
   scrollToTop: false
 });
 
-// Navigate and scroll to an id
+// Navigate and scroll to an id afterwards
 navigate({
   path: '/user/settings',
   scrollToId: 'password-form'
@@ -442,6 +448,22 @@ If you need to perform async logic before entering a route, do so before trigger
 }
 ```
 
+## Base path
+If your application is running in a folder you can configure the `basePath` setting in the router options. For example if your app is runing in `/some/folder/` you can set:
+
+```js
+// Router configuration object
+{
+  basePath: '/some/folder/'
+}
+```
+
+The first and last slashes are optional.
+
+Once the router inits, this base path will be added automatically to all available routes.
+
+You don't need to add the base path to your links either. When using the `link` action, it will be automaticaly added to the `href` when the link is mounted to the DOM.
+
 ## API
 ### Router configuration options
 
@@ -450,18 +472,20 @@ If you need to perform async logic before entering a route, do so before trigger
 * `activeClass` the default CSS class that will be applied to active links that use the `active` action.
 * `scrollToTop` determines if the scroll should be set to the top left when transitioning to a new route. The default is `true`.
 * `manageScroll` if set to `false` all scrolling features of the router will be ignored. The default is `true`.
-* `onRouteMatch` a sync function that will be triggered whenever a path matches a route
+* `onRouteMatch` a sync function that will be triggered whenever a path matches a route.
+* `basePath` a base path that will be automatically added to all routes and links using the `link` action. The first and last slashes are optional.
+
 
 ### Route configuration options
-* `path` the path of the route
-* `component` the component that will be rendered when the path is matched
-* `components` the component tree that will be rendered when the path is matched
-* `children` an array of children routes
-* `blockPageScroll` whether to removing the scrolling capability of the `body` element by setting `overflow: hidden;`
+* `path` the path of the route.
+* `component` the component that will be rendered when the path is matched.
+* `components` the component tree that will be rendered when the path is matched.
+* `children` an array of children routes.
+* `blockPageScroll` whether to removing the scrolling capability of the `body` element by setting `overflow: hidden;`.
 * `meta` and object with values that can be read from hooks or the `currentRoute` store.
 
 ### `navigate()` options
-* `path` the path that will be used to match a route
+* `path` the path that will be used to match a route.
 * `scrollToTop` determines if the scroll should be set to the top left after transitioning to the next route. The default is `true`.
 * `scrollToId` scroll to an element with an `id` after transitioning to the next route.
 * `replace` replace the current item in history instead of adding a new one. The default is `false`.
