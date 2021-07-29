@@ -1,3 +1,11 @@
+# 0.3.0
+
+### New features
+* Added `endWithSlash` option
+
+### Fixes
+* Fixed a bug where the active class wasn't added to links
+
 # 0.2.1
 
 Minor fixes.
