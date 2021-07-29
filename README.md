@@ -465,7 +465,7 @@ Once the router inits, this base path will be added automatically to all availab
 
 * `notFoundComponent` a component reference that will be rendered if there are no matched routes.
 * `notFoundComponents` an array of component references that will be rendered if there are no matched routes.
-* `activeClass` the default CSS class that will be applied to active links that use the `active` action.
+* `activeClass` the CSS class that will be applied to active links that use the `active` action. The default is `active`.
 * `scrollToTop` a boolean that determines if the scroll should be set to the top left when transitioning to a new route. The default is `true`.
 * `manageScroll` if set to `false` all scrolling features of the router will be ignored. The default is `true`.
 * `onRouteMatch` a sync function that will be triggered whenever a path matches a route.
