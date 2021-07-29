@@ -1,3 +1,8 @@
+# 0.3.2
+
+### Fixes
+* Fixed a bug related to `document.readyState`
+
 # 0.3.1
 
 ### Fixes
