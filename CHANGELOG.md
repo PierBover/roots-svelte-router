@@ -1,3 +1,8 @@
+# 0.3.3
+
+### Fixes
+* Fixed a bug related to single slash paths `/`
+
 # 0.3.2
 
 ### Fixes
